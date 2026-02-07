@@ -1,112 +1,118 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
 
-import { Collapsible } from '@/components/ui/collapsible';
-import { ExternalLink } from '@/components/external-link';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
+import { StyleSheet, TextInput, View, TouchableOpacity, ScrollView } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Fonts } from '@/constants/theme';
+import { Ionicons } from '@expo/vector-icons';
+import ProfileCard from '@/components/ProfileCard';
+import { useRouter } from 'expo-router';
+
+const users = [
+  { name: 'SOPHIA POZZ', image: 'https://i.pravatar.cc/300?u=a042581f4e29026704d' },
+  { name: 'OLIFINIA', image: 'https://i.pravatar.cc/300?u=a042581f4e29026705d' },
+  { name: 'SANDRA KISS', image: 'https://i.pravatar.cc/300?u=a042581f4e29026706d' },
+  { name: 'OPRAH MOGS', image: 'https://i.pravatar.cc/300?u=a042581f4e29026707d' },
+  { name: 'OLIVA', image: 'https://i.pravatar.cc/300?u=a042581f4e29026708d' },
+  { name: 'MARGO', image: 'https://i.pravatar.cc/300?u=a042581f4e29026709d' },
+];
 
 export default function TabTwoScreen() {
+  const router = useRouter();
+
+  const handleProfilePress = (user) => {
+    router.push({ pathname: 'user-profile', params: { user: JSON.stringify(user) } });
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText
-          type="title"
-          style={{
-            fontFamily: Fonts.rounded,
-          }}>
-          Explore
+    <ThemedView style={styles.container}>
+      <View style={styles.header}>
+        <Ionicons name="menu" size={24} color="white" />
+        <ThemedText type="title" style={{ fontFamily: Fonts.rounded }}>
+          CATEGORIES
         </ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image
-          source={require('@/assets/images/react-logo.png')}
-          style={{ width: 100, height: 100, alignSelf: 'center' }}
-        />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful{' '}
-          <ThemedText type="defaultSemiBold" style={{ fontFamily: Fonts.mono }}>
-            react-native-reanimated
-          </ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+        <Ionicons name="person-circle" size={24} color="white" />
+      </View>
+      <View style={styles.searchBar}>
+        <Ionicons name="search" size={20} color="gray" />
+        <TextInput placeholder="SEARCH" placeholderTextColor="gray" style={styles.searchInput} />
+        <Ionicons name="mic" size={20} color="gray" />
+      </View>
+      <View style={styles.filters}>
+        <TouchableOpacity style={[styles.filterButton, styles.activeFilter]}>
+          <ThemedText style={styles.filterText}>POPULAR</ThemedText>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.filterButton}>
+          <ThemedText style={styles.filterText}>LIVE</ThemedText>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.filterButton}>
+          <ThemedText style={styles.filterText}>MILFS</ThemedText>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.filterButton}>
+          <ThemedText style={styles.filterText}>FETESHISTS</ThemedText>
+        </TouchableOpacity>
+      </View>
+      <ScrollView contentContainerStyle={styles.grid}>
+        {users.map((user) => (
+          <TouchableOpacity key={user.name} onPress={() => handleProfilePress(user)}>
+            <ProfileCard user={user} />
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  container: {
+    flex: 1,
+    paddingTop: 50,
+    backgroundColor: '#1E1E2C',
   },
-  titleContainer: {
+  header: {
     flexDirection: 'row',
-    gap: 8,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  searchBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#2A2A3C',
+    borderRadius: 20,
+    paddingHorizontal: 15,
+    marginHorizontal: 20,
+    marginTop: 20,
+  },
+  searchInput: {
+    flex: 1,
+    color: 'white',
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+  },
+  filters: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginVertical: 20,
+    marginHorizontal: 10,
+
+  },
+  filterButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 20,
+    backgroundColor: '#2A2A3C',
+  },
+  activeFilter: {
+    backgroundColor: '#FF3366',
+  },
+  filterText: {
+    color: 'white',
+    fontSize: 12,
+  },
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    paddingHorizontal: 10,
   },
 });
