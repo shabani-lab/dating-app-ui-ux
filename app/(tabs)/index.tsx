@@ -1,19 +1,20 @@
 
 import { ImageBackground, StyleSheet, Text, View } from 'react-native';
+import { HOME_HERO } from '@/constants/mock-data';
 
 const App = () => {
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={{ uri: 'https://i.pravatar.cc/300?u=a042581f4e29026704d' }}
+        source={{ uri: HOME_HERO.backgroundImage }}
         style={styles.image}
       >
         <View style={styles.overlay} />
         <View style={styles.content}>
-          <Text style={styles.title}>THE BEST WEBCAM MODELS FOR YOUR PLEASURE</Text>
+          <Text style={styles.title}>{HOME_HERO.title}</Text>
           <View style={styles.hotcamContainer}>
-            <Text style={styles.hotcamText}>HOTCAM</Text>
-            <Text style={styles.subtitle}>IMMERSE YOURSELF IN A WORLD OF SEXUAL FANTASY</Text>
+            <Text style={styles.hotcamText}>{HOME_HERO.brand}</Text>
+            <Text style={styles.subtitle}>{HOME_HERO.subtitle}</Text>
           </View>
         </View>
       </ImageBackground>

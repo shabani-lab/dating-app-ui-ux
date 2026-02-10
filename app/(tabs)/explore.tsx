@@ -1,26 +1,36 @@
 
-import { StyleSheet, TextInput, View, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useMemo, useState } from 'react';
+import { ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Fonts } from '@/constants/theme';
 import { Ionicons } from '@expo/vector-icons';
 import ProfileCard from '@/components/ProfileCard';
 import { useRouter } from 'expo-router';
+import { USERS, type UserCategory, type UserProfile } from '@/constants/users';
 
-const users = [
-  { name: 'SOPHIA POZZ', image: 'https://i.pravatar.cc/300?u=a042581f4e29026704d' },
-  { name: 'OLIFINIA', image: 'https://i.pravatar.cc/300?u=a042581f4e29026705d' },
-  { name: 'SANDRA KISS', image: 'https://i.pravatar.cc/300?u=a042581f4e29026706d' },
-  { name: 'OPRAH MOGS', image: 'https://i.pravatar.cc/300?u=a042581f4e29026707d' },
-  { name: 'OLIVA', image: 'https://i.pravatar.cc/300?u=a042581f4e29026708d' },
-  { name: 'MARGO', image: 'https://i.pravatar.cc/300?u=a042581f4e29026709d' },
-];
+type FilterOption = 'ALL' | UserCategory;
+
+const FILTERS: FilterOption[] = ['ALL', 'POPULAR', 'LIVE', 'MILFS', 'FETISHISTS'];
 
 export default function TabTwoScreen() {
   const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeFilter, setActiveFilter] = useState<FilterOption>('POPULAR');
 
-  const handleProfilePress = (user) => {
-    router.push({ pathname: 'user-profile', params: { user: JSON.stringify(user) } });
+  const filteredUsers = useMemo(() => {
+    const normalizedQuery = searchQuery.trim().toLowerCase();
+
+    return USERS.filter((user) => {
+      const matchesFilter = activeFilter === 'ALL' || user.category === activeFilter;
+      const matchesSearch = normalizedQuery.length === 0 || user.name.toLowerCase().includes(normalizedQuery);
+
+      return matchesFilter && matchesSearch;
+    });
+  }, [activeFilter, searchQuery]);
+
+  const handleProfilePress = (user: UserProfile) => {
+    router.push({ pathname: '/user-profile', params: { id: user.id } });
   };
 
   return (
@@ -34,26 +44,29 @@ export default function TabTwoScreen() {
       </View>
       <View style={styles.searchBar}>
         <Ionicons name="search" size={20} color="gray" />
-        <TextInput placeholder="SEARCH" placeholderTextColor="gray" style={styles.searchInput} />
+        <TextInput
+          placeholder="SEARCH"
+          placeholderTextColor="gray"
+          style={styles.searchInput}
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+        />
         <Ionicons name="mic" size={20} color="gray" />
       </View>
       <View style={styles.filters}>
-        <TouchableOpacity style={[styles.filterButton, styles.activeFilter]}>
-          <ThemedText style={styles.filterText}>POPULAR</ThemedText>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.filterButton}>
-          <ThemedText style={styles.filterText}>LIVE</ThemedText>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.filterButton}>
-          <ThemedText style={styles.filterText}>MILFS</ThemedText>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.filterButton}>
-          <ThemedText style={styles.filterText}>FETESHISTS</ThemedText>
-        </TouchableOpacity>
+        {FILTERS.map((filter) => (
+          <TouchableOpacity
+            key={filter}
+            style={[styles.filterButton, activeFilter === filter ? styles.activeFilter : undefined]}
+            onPress={() => setActiveFilter(filter)}
+          >
+            <ThemedText style={styles.filterText}>{filter}</ThemedText>
+          </TouchableOpacity>
+        ))}
       </View>
       <ScrollView contentContainerStyle={styles.grid}>
-        {users.map((user) => (
-          <TouchableOpacity key={user.name} onPress={() => handleProfilePress(user)}>
+        {filteredUsers.map((user) => (
+          <TouchableOpacity key={user.id} onPress={() => handleProfilePress(user)} style={styles.cardWrapper}>
             <ProfileCard user={user} />
           </TouchableOpacity>
         ))}
@@ -94,7 +107,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     marginVertical: 20,
     marginHorizontal: 10,
-
   },
   filterButton: {
     paddingVertical: 8,
@@ -114,5 +126,9 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     paddingHorizontal: 10,
+    paddingBottom: 24,
+  },
+  cardWrapper: {
+    width: '47%',
   },
 });

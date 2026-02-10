@@ -8,19 +8,18 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 
 #### Android
 
-Android previews are defined as a `workspace.onStart` hook and started as a vscode task when the workspace is opened/started.
+Use Expo Go with one of these commands:
+- `npm run go` (recommended for physical devices, uses tunnel)
+- `npm run start` then scan the QR code in Expo Go
+- `npm run android` for an Android emulator with Expo Go
 
-Note, if you can't find the task, either:
-- Rebuild the environment (using command palette: `IDX: Rebuild Environment`), or
-- Run `npm run android -- --tunnel` command manually run android and see the output in your terminal. The device should pick up this new command and switch to start displaying the output from it.
+If a previous dev server was running, clear cache once:
+- `npx expo start -c --go --tunnel`
 
-In the output of this command/task, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You'll also find options to open the app's developer menu, reload the app, and more.
+If Expo Go shows `Failed to download remote update`:
+- make sure phone internet is working and Expo Go is updated
+- close Expo Go, run `npx expo start -c --go --tunnel`, then scan the new QR
+- disable VPN/private DNS/ad blocker on phone and retry
 
 #### Web
 

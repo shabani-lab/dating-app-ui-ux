@@ -1,27 +1,32 @@
 
 import React from 'react';
-import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
+import { ImageBackground, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import type { UserProfile } from '@/constants/users';
 
-const ProfileCard = ({ user }) => {
+type ProfileCardProps = {
+  user: UserProfile;
+};
+
+const ProfileCard = ({ user }: ProfileCardProps) => {
   return (
-    <TouchableOpacity style={styles.card}>
+    <View style={styles.card}>
       <ImageBackground source={{ uri: user.image }} style={styles.image}>
         <View style={styles.liveBadge}>
           <Text style={styles.liveText}>LIVE</Text>
         </View>
-        <TouchableOpacity style={styles.heartIcon}>
+        <View style={styles.heartIcon}>
           <Ionicons name="heart-outline" size={24} color="white" />
-        </TouchableOpacity>
+        </View>
         <Text style={styles.name}>{user.name}</Text>
       </ImageBackground>
-    </TouchableOpacity>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    width: '45%',
+    width: '100%',
     height: 250,
     borderRadius: 15,
     marginBottom: 20,
@@ -59,7 +64,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 10,
     left: 10,
-    textShadow: '1px 1px 10px rgba(0,0,0,0.75)',
+    textShadowColor: 'rgba(0,0,0,0.75)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 10,
   },
 });
 

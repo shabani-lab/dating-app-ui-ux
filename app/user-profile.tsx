@@ -3,35 +3,18 @@ import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { DEFAULT_USER, getUserById } from '@/constants/users';
 
 const UserProfileScreen = () => {
   const router = useRouter();
-  const { user: userString } = useLocalSearchParams();
-  const user = userString ? JSON.parse(userString) : {
-    name: 'OPRAH MOSS',
-    online: true,
-    followers: 8067,
-    privateVideos: 69,
-    rating: 5.0,
-    height: 168,
-    age: 28,
-    gender: 'FEMALE',
-    images: [
-      'https://i.pravatar.cc/300?u=a042581f4e29026707d',
-      'https://i.pravatar.cc/300?u=a042581f4e29026708d',
-      'https://i.pravatar.cc/300?u=a042581f4e29026709d',
-      'https://i.pravatar.cc/300?u=a042581f4e29026710d',
-    ],
-  };
+  const { id } = useLocalSearchParams<{ id?: string | string[] }>();
+  const userId = Array.isArray(id) ? id[0] : id;
+  const user = getUserById(userId) ?? DEFAULT_USER;
 
   return (
     <View style={styles.container}>
       <ScrollView>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={24} color="white" />
-          </TouchableOpacity>
-        </View>
+       
 
         <View style={styles.profileHeader}>
           <Image
@@ -70,7 +53,7 @@ const UserProfileScreen = () => {
         </View>
 
         <View style={styles.galleryContainer}>
-          {user.images.map((url, index) => (
+          {user.images.map((url: string, index: number) => (
             <Image key={index} source={{ uri: url }} style={styles.galleryImage} />
           ))}
         </View>

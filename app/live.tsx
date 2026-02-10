@@ -2,35 +2,29 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { ImageBackground, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { LIVE_STREAM } from '@/constants/mock-data';
 
 const LiveScreen = () => {
-  const messages = [
-    { id: 1, user: 'Joseph Johnson', message: 'Are you new here?' },
-    { id: 2, user: 'Sammill', message: 'Your broadcast rock 🔥' },
-    { id: 3, user: 'James Mitchell', message: 'So sweet 😍' },
-    { id: 4, user: 'Joel Grant', message: '😍😍😍' },
-  ];
-
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={{ uri: 'https://i.pravatar.cc/300?u=a042581f4e29026707d' }}
+        source={{ uri: LIVE_STREAM.hostImage }}
         style={styles.backgroundImage}
       >
         <View style={styles.overlay} />
         <View style={styles.header}>
           <View style={styles.userInfo}>
             <Ionicons name="person-circle" size={32} color="white" />
-            <Text style={styles.username}>OPRAH MOSS</Text>
+            <Text style={styles.username}>{LIVE_STREAM.hostName}</Text>
           </View>
           <View style={styles.viewersContainer}>
             <Ionicons name="eye" size={16} color="white" />
-            <Text style={styles.viewersText}>256</Text>
+            <Text style={styles.viewersText}>{LIVE_STREAM.viewers}</Text>
           </View>
         </View>
 
         <ScrollView style={styles.chatContainer}>
-          {messages.map((msg) => (
+          {LIVE_STREAM.messages.map((msg) => (
             <View key={msg.id} style={styles.messageContainer}>
               <Text style={styles.messageUser}>{msg.user}:</Text>
               <Text style={styles.messageText}>{msg.message}</Text>
