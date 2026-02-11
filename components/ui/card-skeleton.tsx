@@ -1,5 +1,6 @@
 import { Radius, Spacing } from '@/constants/theme';
 import { useAppPalette } from '@/hooks/use-app-palette';
+import { useReducedMotion } from '@/hooks/use-reduced-motion';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Animated, Easing, StyleSheet, View } from 'react-native';
 
@@ -11,8 +12,14 @@ export default function CardSkeleton({ height = 220 }: CardSkeletonProps) {
   const palette = useAppPalette();
   const styles = useMemo(() => createStyles(palette, height), [palette, height]);
   const opacity = useRef(new Animated.Value(0.55)).current;
+  const reduceMotionEnabled = useReducedMotion();
 
   useEffect(() => {
+    if (reduceMotionEnabled) {
+      opacity.setValue(1);
+      return;
+    }
+
     const pulse = Animated.loop(
       Animated.sequence([
         Animated.timing(opacity, { toValue: 1, duration: 700, easing: Easing.linear, useNativeDriver: true }),
@@ -25,7 +32,7 @@ export default function CardSkeleton({ height = 220 }: CardSkeletonProps) {
     return () => {
       pulse.stop();
     };
-  }, [opacity]);
+  }, [opacity, reduceMotionEnabled]);
 
   return (
     <Animated.View style={[styles.card, { opacity }]}>

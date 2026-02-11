@@ -1,8 +1,9 @@
-import { Radius, Sizes, Spacing, Typography } from "@/constants/theme";
+import IconButton from "@/components/ui/icon-button";
+import { Sizes, Spacing, Typography } from "@/constants/theme";
 import { useAppPalette } from "@/hooks/use-app-palette";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useMemo } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 type IconName = React.ComponentProps<typeof Ionicons>["name"];
 
@@ -50,23 +51,15 @@ type HeaderButtonProps = {
 };
 
 function HeaderButton({ icon, onPress }: HeaderButtonProps) {
-   const palette = useAppPalette();
-   const styles = useMemo(() => createStyles(palette), [palette]);
-
    if (!icon) {
-      return <View style={styles.buttonPlaceholder} />;
+      return <View style={staticStyles.buttonPlaceholder} />;
    }
 
    return (
-      <Pressable
-         style={styles.button}
-         onPress={onPress}>
-         <Ionicons
-            name={icon}
-            size={Sizes.iconLg}
-            color={palette.textPrimary}
-         />
-      </Pressable>
+      <IconButton
+         icon={icon}
+         onPress={onPress}
+      />
    );
 }
 
@@ -88,18 +81,11 @@ const createStyles = (palette: ReturnType<typeof useAppPalette>) =>
          textAlign: "center",
          letterSpacing: 0.6,
       },
-      button: {
-         width: Sizes.touchTarget,
-         height: Sizes.touchTarget,
-         borderRadius: Radius.pill,
-         alignItems: "center",
-         justifyContent: "center",
-         backgroundColor: palette.surface,
-         borderWidth: 1,
-         borderColor: palette.border,
-      },
-      buttonPlaceholder: {
-         width: Sizes.touchTarget,
-         height: Sizes.touchTarget,
-      },
    });
+
+const staticStyles = StyleSheet.create({
+   buttonPlaceholder: {
+      width: Sizes.touchTarget,
+      height: Sizes.touchTarget,
+   },
+});

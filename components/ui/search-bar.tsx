@@ -2,7 +2,8 @@ import { Radius, Sizes, Spacing, Typography } from '@/constants/theme';
 import { useAppPalette } from '@/hooks/use-app-palette';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useMemo } from 'react';
-import { Pressable, StyleProp, StyleSheet, TextInput, View, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, TextInput, View, ViewStyle } from 'react-native';
+import AnimatedPressable from '@/components/ui/animated-pressable';
 
 type IconName = React.ComponentProps<typeof Ionicons>['name'];
 
@@ -48,13 +49,13 @@ export default function SearchBar({
         onChangeText={onChangeText}
       />
       {value.length > 0 ? (
-        <Pressable style={styles.actionButton} onPress={handleClear}>
+        <AnimatedPressable style={styles.actionButton} onPress={handleClear}>
           <Ionicons name="close-circle" size={Sizes.iconLg} color={palette.textMuted} />
-        </Pressable>
+        </AnimatedPressable>
       ) : onTrailingPress ? (
-        <Pressable style={styles.actionButton} onPress={onTrailingPress}>
+        <AnimatedPressable style={styles.actionButton} onPress={onTrailingPress}>
           <Ionicons name={trailingIcon} size={Sizes.iconMd} color={palette.textMuted} />
-        </Pressable>
+        </AnimatedPressable>
       ) : (
         <View style={styles.actionButton}>
           <Ionicons name={trailingIcon} size={Sizes.iconMd} color={palette.textMuted} />

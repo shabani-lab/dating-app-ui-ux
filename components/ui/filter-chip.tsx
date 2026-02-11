@@ -1,7 +1,8 @@
 import { Radius, Sizes, Spacing, Typography } from '@/constants/theme';
 import { useAppPalette } from '@/hooks/use-app-palette';
 import React, { useMemo } from 'react';
-import { Pressable, StyleProp, StyleSheet, Text, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, Text, ViewStyle } from 'react-native';
+import AnimatedPressable from '@/components/ui/animated-pressable';
 
 type FilterChipProps = {
   label: string;
@@ -15,13 +16,13 @@ export default function FilterChip({ label, isActive = false, onPress, style }: 
   const styles = useMemo(() => createStyles(palette), [palette]);
 
   return (
-    <Pressable
+    <AnimatedPressable
       style={[styles.chip, isActive ? styles.activeChip : undefined, style]}
       onPress={onPress}
       accessibilityRole="button"
       accessibilityState={{ selected: isActive }}>
       <Text style={[styles.text, isActive ? styles.activeText : styles.inactiveText]}>{label}</Text>
-    </Pressable>
+    </AnimatedPressable>
   );
 }
 

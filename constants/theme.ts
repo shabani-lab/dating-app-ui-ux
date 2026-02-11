@@ -3,7 +3,7 @@
  * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
  */
 
-import { Platform } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 
 const tintColorLight = '#E42E6E';
 const tintColorDark = '#FF3B78';
@@ -132,6 +132,15 @@ export const Radius = {
   lg: 16,
   xl: 20,
   pill: 999,
+} as const;
+
+export const Borders = {
+  hairline: StyleSheet.hairlineWidth,
+} as const;
+
+export const Motion = {
+  fast: 120,
+  medium: 180,
 } as const;
 
 export const Fonts = Platform.select({
