@@ -5,6 +5,11 @@ import ScreenHeader from '@/components/ui/screen-header';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useMemo } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import AnimatedPressable from '@/components/ui/animated-pressable';
+import FlatSection from '@/components/ui/flat-section';
+import IconButton from '@/components/ui/icon-button';
+import ListRow from '@/components/ui/list-row';
+import Separator from '@/components/ui/separator';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ProfileScreen() {
@@ -14,41 +19,37 @@ export default function ProfileScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
       <ScreenHeader title="PROFILE" leftIcon="settings-outline" rightIcon="notifications-outline" />
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView contentContainerStyle={styles.content} keyboardDismissMode="on-drag">
         <View style={styles.headerContent}>
           <Ionicons name="person-circle" size={72} color={palette.accent} />
           <Text style={styles.username}>{PROFILE_MOCK.username}</Text>
           <Text style={styles.plan}>{PROFILE_MOCK.plan} plan</Text>
         </View>
 
-        <View style={styles.cards}>
-          <View style={styles.card}>
-            <Text style={styles.value}>${PROFILE_MOCK.earningsThisWeek}</Text>
-            <Text style={styles.label}>Earnings this week</Text>
+        <FlatSection style={styles.statsSection}>
+          <ListRow icon="cash-outline" label="Earnings this week" value={`$${PROFILE_MOCK.earningsThisWeek}`} />
+          <Separator inset={Sizes.iconMd + Spacing.md} />
+          <ListRow icon="time-outline" label="Stream hours" value={`${PROFILE_MOCK.streamHours}h`} />
+          <Separator inset={Sizes.iconMd + Spacing.md} />
+          <ListRow icon="sparkles-outline" label="Private bookings" value={`${PROFILE_MOCK.privateBookings}`} />
+        </FlatSection>
+
+        <FlatSection style={styles.quickActionsSection}>
+          <View style={styles.quickActions}>
+            <AnimatedPressable style={styles.quickAction}>
+              <IconButton icon="videocam-outline" />
+              <Text style={styles.quickActionText}>Live</Text>
+            </AnimatedPressable>
+            <AnimatedPressable style={styles.quickAction}>
+              <IconButton icon="cash-outline" />
+              <Text style={styles.quickActionText}>Payout</Text>
+            </AnimatedPressable>
+            <AnimatedPressable style={styles.quickAction}>
+              <IconButton icon="stats-chart-outline" />
+              <Text style={styles.quickActionText}>Stats</Text>
+            </AnimatedPressable>
           </View>
-          <View style={styles.card}>
-            <Text style={styles.value}>{PROFILE_MOCK.streamHours}h</Text>
-            <Text style={styles.label}>Stream hours</Text>
-          </View>
-          <View style={styles.card}>
-            <Text style={styles.value}>{PROFILE_MOCK.privateBookings}</Text>
-            <Text style={styles.label}>Private bookings</Text>
-          </View>
-        </View>
-        <View style={styles.quickActions}>
-          <View style={styles.quickAction}>
-            <Ionicons name="videocam-outline" size={Sizes.iconLg} color={palette.textPrimary} />
-            <Text style={styles.quickActionText}>Go Live</Text>
-          </View>
-          <View style={styles.quickAction}>
-            <Ionicons name="cash-outline" size={Sizes.iconLg} color={palette.textPrimary} />
-            <Text style={styles.quickActionText}>Payout</Text>
-          </View>
-          <View style={styles.quickAction}>
-            <Ionicons name="stats-chart-outline" size={Sizes.iconLg} color={palette.textPrimary} />
-            <Text style={styles.quickActionText}>Insights</Text>
-          </View>
-        </View>
+        </FlatSection>
       </ScrollView>
     </SafeAreaView>
   );
@@ -80,28 +81,14 @@ const createStyles = (palette: ReturnType<typeof useAppPalette>) =>
       fontSize: Typography.body.fontSize,
       fontWeight: '600',
     },
-    cards: {
-      gap: Spacing.md,
+    statsSection: {
+      paddingVertical: Spacing.sm,
     },
-    card: {
-      backgroundColor: palette.surface,
-      borderRadius: Radius.md,
-      padding: Spacing.lg,
-      borderWidth: 1,
-      borderColor: palette.border,
-    },
-    value: {
-      color: palette.textPrimary,
-      fontSize: Typography.display.fontSize,
-      fontWeight: '700',
-    },
-    label: {
-      color: palette.textMuted,
-      fontSize: Typography.body.fontSize,
-      marginTop: Spacing.xs,
+    quickActionsSection: {
+      marginTop: Spacing.xl,
+      paddingVertical: Spacing.md,
     },
     quickActions: {
-      marginTop: Spacing.xl,
       flexDirection: 'row',
       justifyContent: 'space-between',
       gap: Spacing.sm,
@@ -109,10 +96,7 @@ const createStyles = (palette: ReturnType<typeof useAppPalette>) =>
     quickAction: {
       flex: 1,
       minHeight: Sizes.touchTarget,
-      borderRadius: Radius.md,
-      borderWidth: 1,
-      borderColor: palette.border,
-      backgroundColor: palette.surface,
+      borderRadius: Radius.sm,
       alignItems: 'center',
       justifyContent: 'center',
       paddingVertical: Spacing.md,

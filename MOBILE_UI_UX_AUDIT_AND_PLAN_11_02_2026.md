@@ -169,3 +169,17 @@
   - Scroll Events/Location/Live continuously and verify no layout jumps.
   - In Explore, tap cards and verify feedback + navigation to profile still works.
   - In Live, open keyboard and drag message list to dismiss.
+
+### Evidence — Commit: feat(ui): flatten profile layouts with section separators
+- What changed (files):
+  - `app/(tabs)/profile.tsx`
+  - `app/user-profile.tsx`
+  - `MOBILE_UI_UX_AUDIT_AND_PLAN_11_02_2026.md`
+- Before/after notes:
+  - Replaced segmented profile cards with flat sections and hairline separators.
+  - Standardized profile stat/detail rows and icon-first quick actions.
+  - Added consistent press feedback to profile CTA/action targets.
+- Manual test:
+  - Open Profile tab and verify stat rows/actions render and remain tappable.
+  - Open any user profile from Explore and verify sections, separators, and CTA behavior.
+  - Verify back navigation from `user-profile` still works.

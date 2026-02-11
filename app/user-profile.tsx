@@ -1,5 +1,8 @@
 import ScreenHeader from "@/components/ui/screen-header";
-import { Radius, Spacing } from "@/constants/theme";
+import FlatSection from "@/components/ui/flat-section";
+import AnimatedPressable from "@/components/ui/animated-pressable";
+import Separator from "@/components/ui/separator";
+import { Radius, Spacing, Typography } from "@/constants/theme";
 import { DEFAULT_USER, getUserById } from "@/constants/users";
 import { useAppPalette } from "@/hooks/use-app-palette";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -9,7 +12,6 @@ import {
    ScrollView,
    StyleSheet,
    Text,
-   TouchableOpacity,
    View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -47,32 +49,36 @@ const UserProfileScreen = () => {
                </Text>
             </View>
 
-            <View style={styles.statsContainer}>
+            <FlatSection style={styles.statsContainer}>
                <View style={styles.stat}>
                   <Text style={styles.statValue}>{user.followers}</Text>
                   <Text style={styles.statLabel}>FOLLOWERS</Text>
                </View>
+               <Separator style={styles.statDivider} />
                <View style={styles.stat}>
                   <Text style={styles.statValue}>{user.privateVideos}</Text>
                   <Text style={styles.statLabel}>PRIVATE VIDEOS</Text>
                </View>
+               <Separator style={styles.statDivider} />
                <View style={styles.stat}>
                   <Text style={styles.statValue}>{user.rating}</Text>
-                  <Text style={styles.statLabel}>★★★★★</Text>
+                  <Text style={styles.statLabel}>RATING</Text>
                </View>
-            </View>
+            </FlatSection>
 
-            <View style={styles.detailsContainer}>
+            <FlatSection style={styles.detailsContainer}>
                <View style={styles.detail}>
                   <Text style={styles.detailValue}>{user.height} CM</Text>
                </View>
+               <Separator style={styles.detailsDivider} />
                <View style={styles.detail}>
                   <Text style={styles.detailValue}>{user.age} Y.O.</Text>
                </View>
+               <Separator style={styles.detailsDivider} />
                <View style={styles.detail}>
                   <Text style={styles.detailValue}>{user.gender}</Text>
                </View>
-            </View>
+            </FlatSection>
 
             <View style={styles.galleryContainer}>
                {user.images.map((url: string, index: number) => (
@@ -84,9 +90,9 @@ const UserProfileScreen = () => {
                ))}
             </View>
 
-            <TouchableOpacity style={styles.button}>
+            <AnimatedPressable style={styles.button}>
                <Text style={styles.buttonText}>ORDER A PRIVATE SHOW</Text>
-            </TouchableOpacity>
+            </AnimatedPressable>
          </ScrollView>
       </SafeAreaView>
    );
@@ -114,12 +120,12 @@ const createStyles = (palette: ReturnType<typeof useAppPalette>) =>
       },
       name: {
          color: palette.textPrimary,
-         fontSize: 24,
+         fontSize: Typography.title.fontSize,
          fontWeight: "700",
          marginTop: Spacing.sm + 2,
       },
       onlineStatus: {
-         fontSize: 14,
+         fontSize: Typography.body.fontSize,
          marginTop: Spacing.xs + 1,
       },
       online: {
@@ -130,37 +136,53 @@ const createStyles = (palette: ReturnType<typeof useAppPalette>) =>
       },
       statsContainer: {
          flexDirection: "row",
-         justifyContent: "space-around",
+         alignItems: "stretch",
+         justifyContent: "space-between",
+         marginHorizontal: Spacing.lg,
          marginTop: Spacing.x3 - 2,
+         paddingVertical: Spacing.md,
+      },
+      statDivider: {
+         width: 1,
+         height: "100%",
+         marginVertical: 0,
       },
       stat: {
+         flex: 1,
          alignItems: "center",
+         justifyContent: "center",
       },
       statValue: {
          color: palette.textPrimary,
-         fontSize: 20,
+         fontSize: Typography.title.fontSize,
          fontWeight: "700",
       },
       statLabel: {
          color: palette.textMuted,
-         fontSize: 12,
+         fontSize: Typography.caption.fontSize,
       },
       detailsContainer: {
          flexDirection: "row",
-         justifyContent: "space-around",
+         alignItems: "center",
+         justifyContent: "space-between",
+         marginHorizontal: Spacing.lg,
          marginTop: Spacing.xl,
+         paddingVertical: Spacing.sm,
+      },
+      detailsDivider: {
+         width: 1,
+         height: "70%",
+         marginVertical: 0,
       },
       detail: {
-         backgroundColor: palette.surface,
-         paddingHorizontal: Spacing.xl,
-         paddingVertical: Spacing.sm + 2,
-         borderRadius: Radius.pill,
-         borderWidth: 1,
-         borderColor: palette.border,
+         flex: 1,
+         alignItems: "center",
+         justifyContent: "center",
+         paddingVertical: Spacing.xs + 2,
       },
       detailValue: {
          color: palette.textPrimary,
-         fontSize: 14,
+         fontSize: Typography.body.fontSize,
          fontWeight: "600",
       },
       galleryContainer: {
@@ -187,7 +209,7 @@ const createStyles = (palette: ReturnType<typeof useAppPalette>) =>
       },
       buttonText: {
          color: "#FFFFFF",
-         fontSize: 16,
+         fontSize: Typography.subtitle.fontSize,
          fontWeight: "700",
       },
    });
