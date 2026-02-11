@@ -1,5 +1,5 @@
 import { LIVE_STREAM } from '@/constants/mock-data';
-import { Radius, Spacing } from '@/constants/theme';
+import { Radius, Sizes, Spacing, Typography } from '@/constants/theme';
 import { useAppPalette } from '@/hooks/use-app-palette';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useMemo } from 'react';
@@ -16,11 +16,11 @@ const LiveScreen = () => {
         <View style={styles.overlay} />
         <View style={styles.header}>
           <View style={styles.userInfo}>
-            <Ionicons name="person-circle" size={32} color={palette.textPrimary} />
+            <Ionicons name="person-circle" size={Sizes.iconLg + 8} color="#FFFFFF" />
             <Text style={styles.username}>{LIVE_STREAM.hostName}</Text>
           </View>
           <View style={styles.viewersContainer}>
-            <Ionicons name="eye" size={16} color={palette.textPrimary} />
+            <Ionicons name="eye" size={Sizes.iconSm} color="#FFFFFF" />
             <Text style={styles.viewersText}>{LIVE_STREAM.viewers}</Text>
           </View>
         </View>
@@ -37,13 +37,13 @@ const LiveScreen = () => {
         <View style={styles.inputContainer}>
           <TextInput style={styles.input} placeholder="Type your comment..." placeholderTextColor={palette.textMuted} />
           <TouchableOpacity style={styles.iconButton}>
-            <Ionicons name="send" size={24} color={palette.textPrimary} />
+            <Ionicons name="send" size={Sizes.iconLg} color={palette.textPrimary} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.iconButton}>
-            <Ionicons name="gift" size={24} color={palette.textPrimary} />
+            <Ionicons name="gift" size={Sizes.iconLg} color={palette.textPrimary} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.iconButton}>
-            <Ionicons name="heart" size={24} color={palette.accent} />
+            <Ionicons name="heart" size={Sizes.iconLg} color={palette.accent} />
           </TouchableOpacity>
         </View>
       </ImageBackground>
@@ -78,10 +78,10 @@ const createStyles = (palette: ReturnType<typeof useAppPalette>) =>
       alignItems: 'center',
     },
     username: {
-      color: palette.textPrimary,
+      color: '#FFFFFF',
       marginLeft: Spacing.sm,
       fontWeight: '700',
-      fontSize: 18,
+      fontSize: Typography.subtitle.fontSize,
     },
     viewersContainer: {
       flexDirection: 'row',
@@ -92,8 +92,10 @@ const createStyles = (palette: ReturnType<typeof useAppPalette>) =>
       borderRadius: Radius.pill,
     },
     viewersText: {
-      color: palette.textPrimary,
+      color: '#FFFFFF',
       marginLeft: Spacing.xs + 1,
+      fontSize: Typography.caption.fontSize,
+      fontWeight: '600',
     },
     chatContainer: {
       flex: 1,
@@ -107,9 +109,11 @@ const createStyles = (palette: ReturnType<typeof useAppPalette>) =>
       color: palette.accent,
       fontWeight: '700',
       marginRight: Spacing.sm,
+      fontSize: Typography.body.fontSize,
     },
     messageText: {
-      color: palette.textPrimary,
+      color: '#FFFFFF',
+      fontSize: Typography.body.fontSize,
       flexShrink: 1,
     },
     inputContainer: {
@@ -127,14 +131,15 @@ const createStyles = (palette: ReturnType<typeof useAppPalette>) =>
       borderRadius: Radius.xl,
       paddingHorizontal: Spacing.lg,
       color: palette.textPrimary,
-      height: 44,
+      fontSize: Typography.body.fontSize,
+      height: Sizes.touchTarget,
       borderWidth: 1,
       borderColor: palette.border,
     },
     iconButton: {
       marginLeft: Spacing.lg - 1,
-      width: 44,
-      height: 44,
+      width: Sizes.touchTarget,
+      height: Sizes.touchTarget,
       borderRadius: Radius.pill,
       alignItems: 'center',
       justifyContent: 'center',

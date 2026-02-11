@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 import { ImageBackground, StyleSheet, Text, View } from 'react-native';
 import ScreenHeader from '@/components/ui/screen-header';
 import { HOME_HERO } from '@/constants/mock-data';
-import { Radius, Spacing } from '@/constants/theme';
+import { Radius, Spacing, Typography } from '@/constants/theme';
 import { useAppPalette } from '@/hooks/use-app-palette';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -19,7 +19,7 @@ const App = () => {
       >
         <View style={styles.overlay} />
         <View style={styles.headerWrap}>
-          <ScreenHeader title={HOME_HERO.brand} leftIcon="menu" rightIcon="search" />
+          <ScreenHeader title="HOME" leftIcon="menu" rightIcon="search" />
         </View>
         <View style={styles.content}>
           <Text style={styles.title}>{HOME_HERO.title}</Text>
@@ -49,16 +49,18 @@ const createStyles = (palette: ReturnType<typeof useAppPalette>) =>
     content: {
       flex: 1,
       alignItems: 'center',
-      justifyContent: 'space-around',
+      justifyContent: 'space-between',
       padding: Spacing.xl,
+      paddingBottom: Spacing.x3,
     },
     headerWrap: {
       paddingTop: Spacing.sm,
     },
     title: {
       color: '#FFFFFF',
-      fontSize: 32,
+      fontSize: Typography.display.fontSize,
       fontWeight: '700',
+      lineHeight: Typography.display.lineHeight,
       textAlign: 'center',
     },
     hotcamContainer: {
@@ -67,7 +69,7 @@ const createStyles = (palette: ReturnType<typeof useAppPalette>) =>
     },
     hotcamText: {
       color: '#FFFFFF',
-      fontSize: 24,
+      fontSize: Typography.title.fontSize,
       fontWeight: '700',
       backgroundColor: palette.accent,
       paddingHorizontal: Spacing.xl,
@@ -77,7 +79,7 @@ const createStyles = (palette: ReturnType<typeof useAppPalette>) =>
     },
     subtitle: {
       color: '#FFFFFF',
-      fontSize: 16,
+      fontSize: Typography.subtitle.fontSize,
       textAlign: 'center',
     },
   });

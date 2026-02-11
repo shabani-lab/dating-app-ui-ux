@@ -1,4 +1,4 @@
-import { Radius, Spacing } from "@/constants/theme";
+import { Radius, Sizes, Spacing, Typography } from "@/constants/theme";
 import { useAppPalette } from "@/hooks/use-app-palette";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useMemo } from "react";
@@ -63,7 +63,7 @@ function HeaderButton({ icon, onPress }: HeaderButtonProps) {
          onPress={onPress}>
          <Ionicons
             name={icon}
-            size={22}
+            size={Sizes.iconLg}
             color={palette.textPrimary}
          />
       </Pressable>
@@ -83,14 +83,14 @@ const createStyles = (palette: ReturnType<typeof useAppPalette>) =>
       title: {
          flex: 1,
          color: palette.textPrimary,
-         fontSize: 20,
+         fontSize: Typography.title.fontSize,
          fontWeight: "700",
          textAlign: "center",
          letterSpacing: 0.6,
       },
       button: {
-         width: 44,
-         height: 44,
+         width: Sizes.touchTarget,
+         height: Sizes.touchTarget,
          borderRadius: Radius.pill,
          alignItems: "center",
          justifyContent: "center",
@@ -99,7 +99,7 @@ const createStyles = (palette: ReturnType<typeof useAppPalette>) =>
          borderColor: palette.border,
       },
       buttonPlaceholder: {
-         width: 44,
-         height: 44,
+         width: Sizes.touchTarget,
+         height: Sizes.touchTarget,
       },
    });

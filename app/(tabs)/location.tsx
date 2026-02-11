@@ -1,9 +1,10 @@
 import { LOCATIONS } from '@/constants/mock-data';
-import { Radius, Spacing } from '@/constants/theme';
+import { Radius, Sizes, Spacing, Typography } from '@/constants/theme';
 import { useAppPalette } from '@/hooks/use-app-palette';
 import { Ionicons } from '@expo/vector-icons';
 import CardSkeleton from '@/components/ui/card-skeleton';
 import ScreenHeader from '@/components/ui/screen-header';
+import SectionHeader from '@/components/ui/section-header';
 import React, { useEffect, useMemo, useState } from 'react';
 import { ImageBackground, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -21,6 +22,9 @@ export default function LocationScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <ScreenHeader title="HOT LOCATIONS" leftIcon="navigate-circle-outline" rightIcon="options-outline" />
+      {!isLoading ? (
+        <SectionHeader caption={`${LOCATIONS.length} hot spots near you`} style={styles.resultsMetaWrap} />
+      ) : null}
       <ScrollView contentContainerStyle={styles.content}>
         {isLoading
           ? Array.from({ length: 4 }).map((_, index) => (
@@ -39,15 +43,15 @@ export default function LocationScreen() {
                 </View>
                 <View style={styles.cardBottom}>
                   <View style={styles.row}>
-                    <Ionicons name="people-outline" size={14} color={palette.textPrimary} />
+                    <Ionicons name="people-outline" size={Sizes.iconSm} color="#FFFFFF" />
                     <Text style={styles.meta}>{spot.activeUsers} active users</Text>
                   </View>
                   <View style={styles.row}>
-                    <Ionicons name="ribbon-outline" size={14} color={palette.textPrimary} />
+                    <Ionicons name="ribbon-outline" size={Sizes.iconSm} color="#FFFFFF" />
                     <Text style={styles.meta}>Top: {spot.topCategory}</Text>
                   </View>
                   <View style={styles.row}>
-                    <Ionicons name="navigate-outline" size={14} color={palette.textPrimary} />
+                    <Ionicons name="navigate-outline" size={Sizes.iconSm} color="#FFFFFF" />
                     <Text style={styles.meta}>{spot.distanceKm.toFixed(1)} km away</Text>
                   </View>
                 </View>
@@ -65,9 +69,14 @@ const createStyles = (palette: ReturnType<typeof useAppPalette>) =>
       backgroundColor: palette.background,
     },
     content: {
-      paddingHorizontal: 14,
+      paddingHorizontal: Spacing.lg,
       paddingBottom: 30,
       gap: Spacing.lg,
+    },
+    resultsMetaWrap: {
+      marginTop: -Spacing.sm,
+      marginBottom: Spacing.md,
+      paddingHorizontal: Spacing.lg,
     },
     card: {
       height: 190,
@@ -89,13 +98,13 @@ const createStyles = (palette: ReturnType<typeof useAppPalette>) =>
       paddingTop: Spacing.md,
     },
     city: {
-      color: palette.textPrimary,
-      fontSize: 22,
+      color: '#FFFFFF',
+      fontSize: Typography.title.fontSize,
       fontWeight: '700',
     },
     country: {
-      color: palette.textMuted,
-      fontSize: 14,
+      color: '#FFFFFF',
+      fontSize: Typography.body.fontSize,
     },
     cardBottom: {
       paddingHorizontal: Spacing.md,
@@ -108,8 +117,8 @@ const createStyles = (palette: ReturnType<typeof useAppPalette>) =>
       gap: Spacing.xs + 2,
     },
     meta: {
-      color: palette.textPrimary,
-      fontSize: 13,
+      color: '#FFFFFF',
+      fontSize: Typography.body.fontSize,
       fontWeight: '500',
     },
   });

@@ -94,6 +94,38 @@ export const Spacing = {
   x3: 32,
 } as const;
 
+export const Sizes = {
+  touchTarget: 44,
+  inputHeight: 56,
+  iconSm: 16,
+  iconMd: 20,
+  iconLg: 24,
+  profileCardHeight: 250,
+} as const;
+
+export const Typography = {
+  caption: {
+    fontSize: 12,
+    lineHeight: 16,
+  },
+  body: {
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  subtitle: {
+    fontSize: 16,
+    lineHeight: 22,
+  },
+  title: {
+    fontSize: 20,
+    lineHeight: 28,
+  },
+  display: {
+    fontSize: 32,
+    lineHeight: 38,
+  },
+} as const;
+
 export const Radius = {
   sm: 8,
   md: 12,

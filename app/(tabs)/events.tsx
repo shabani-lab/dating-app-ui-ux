@@ -1,9 +1,10 @@
 import { EVENTS } from '@/constants/mock-data';
-import { Radius, Spacing } from '@/constants/theme';
+import { Radius, Sizes, Spacing, Typography } from '@/constants/theme';
 import { useAppPalette } from '@/hooks/use-app-palette';
 import { Ionicons } from '@expo/vector-icons';
 import CardSkeleton from '@/components/ui/card-skeleton';
 import ScreenHeader from '@/components/ui/screen-header';
+import SectionHeader from '@/components/ui/section-header';
 import React, { useEffect, useMemo, useState } from 'react';
 import { ImageBackground, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -21,6 +22,9 @@ export default function EventsScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <ScreenHeader title="UPCOMING EVENTS" leftIcon="calendar-outline" rightIcon="options-outline" />
+      {!isLoading ? (
+        <SectionHeader caption={`${EVENTS.length} scheduled events`} style={styles.resultsMetaWrap} />
+      ) : null}
       <ScrollView contentContainerStyle={styles.content}>
         {isLoading
           ? Array.from({ length: 4 }).map((_, index) => (
@@ -39,13 +43,13 @@ export default function EventsScreen() {
                 <View style={styles.cardBody}>
                   <Text style={styles.eventTitle}>{event.title}</Text>
                   <View style={styles.row}>
-                    <Ionicons name="calendar-outline" size={14} color={palette.textPrimary} />
+                    <Ionicons name="calendar-outline" size={Sizes.iconSm} color="#FFFFFF" />
                     <Text style={styles.meta}>
                       {event.date} • {event.time}
                     </Text>
                   </View>
                   <View style={styles.row}>
-                    <Ionicons name="location-outline" size={14} color={palette.textPrimary} />
+                    <Ionicons name="location-outline" size={Sizes.iconSm} color="#FFFFFF" />
                     <Text style={styles.meta}>{event.venue}</Text>
                   </View>
                   <View style={styles.footer}>
@@ -67,9 +71,14 @@ const createStyles = (palette: ReturnType<typeof useAppPalette>) =>
       backgroundColor: palette.background,
     },
     content: {
-      paddingHorizontal: 14,
+      paddingHorizontal: Spacing.lg,
       paddingBottom: 30,
       gap: Spacing.lg,
+    },
+    resultsMetaWrap: {
+      marginTop: -Spacing.sm,
+      marginBottom: Spacing.md,
+      paddingHorizontal: Spacing.lg,
     },
     card: {
       height: 210,
@@ -96,7 +105,7 @@ const createStyles = (palette: ReturnType<typeof useAppPalette>) =>
     },
     badgeText: {
       color: '#FFFFFF',
-      fontSize: 12,
+      fontSize: Typography.caption.fontSize,
       fontWeight: '700',
     },
     cardBody: {
@@ -105,8 +114,8 @@ const createStyles = (palette: ReturnType<typeof useAppPalette>) =>
       gap: Spacing.xs + 2,
     },
     eventTitle: {
-      color: palette.textPrimary,
-      fontSize: 20,
+      color: '#FFFFFF',
+      fontSize: Typography.title.fontSize,
       fontWeight: '700',
     },
     row: {
@@ -115,8 +124,8 @@ const createStyles = (palette: ReturnType<typeof useAppPalette>) =>
       gap: Spacing.xs + 2,
     },
     meta: {
-      color: palette.textMuted,
-      fontSize: 13,
+      color: '#FFFFFF',
+      fontSize: Typography.body.fontSize,
     },
     footer: {
       marginTop: Spacing.xs + 2,
@@ -125,13 +134,13 @@ const createStyles = (palette: ReturnType<typeof useAppPalette>) =>
       alignItems: 'center',
     },
     attendees: {
-      color: palette.textPrimary,
+      color: '#FFFFFF',
       fontWeight: '600',
-      fontSize: 13,
+      fontSize: Typography.body.fontSize,
     },
     price: {
-      color: palette.accentSoft,
+      color: '#FFFFFF',
       fontWeight: '700',
-      fontSize: 14,
+      fontSize: Typography.subtitle.fontSize,
     },
   });
