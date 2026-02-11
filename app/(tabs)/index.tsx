@@ -1,15 +1,26 @@
 
+import React, { useMemo } from 'react';
 import { ImageBackground, StyleSheet, Text, View } from 'react-native';
+import ScreenHeader from '@/components/ui/screen-header';
 import { HOME_HERO } from '@/constants/mock-data';
+import { Radius, Spacing } from '@/constants/theme';
+import { useAppPalette } from '@/hooks/use-app-palette';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const App = () => {
+  const palette = useAppPalette();
+  const styles = useMemo(() => createStyles(palette), [palette]);
+
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <ImageBackground
         source={{ uri: HOME_HERO.backgroundImage }}
         style={styles.image}
       >
         <View style={styles.overlay} />
+        <View style={styles.headerWrap}>
+          <ScreenHeader title={HOME_HERO.brand} leftIcon="menu" rightIcon="search" />
+        </View>
         <View style={styles.content}>
           <Text style={styles.title}>{HOME_HERO.title}</Text>
           <View style={styles.hotcamContainer}>
@@ -18,53 +29,57 @@ const App = () => {
           </View>
         </View>
       </ImageBackground>
-    </View>
+    </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  image: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-  },
-  content: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    padding: 20,
-  },
-  title: {
-    color: 'white',
-    fontSize: 32,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  hotcamContainer: {
-    alignItems: 'center',
-  },
-  hotcamText: {
-    color: 'white',
-    fontSize: 24,
-    fontWeight: 'bold',
-    backgroundColor: '#FF3366',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 20,
-    overflow: 'hidden',
-    marginBottom: 10,
-  },
-  subtitle: {
-    color: 'white',
-    fontSize: 16,
-    textAlign: 'center',
-  },
-});
+const createStyles = (palette: ReturnType<typeof useAppPalette>) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    image: {
+      flex: 1,
+      justifyContent: 'center',
+    },
+    overlay: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: palette.overlayStrong,
+    },
+    content: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'space-around',
+      padding: Spacing.xl,
+    },
+    headerWrap: {
+      paddingTop: Spacing.sm,
+    },
+    title: {
+      color: '#FFFFFF',
+      fontSize: 32,
+      fontWeight: '700',
+      textAlign: 'center',
+    },
+    hotcamContainer: {
+      alignItems: 'center',
+      gap: Spacing.sm,
+    },
+    hotcamText: {
+      color: '#FFFFFF',
+      fontSize: 24,
+      fontWeight: '700',
+      backgroundColor: palette.accent,
+      paddingHorizontal: Spacing.xl,
+      paddingVertical: Spacing.md,
+      borderRadius: Radius.xl,
+      overflow: 'hidden',
+    },
+    subtitle: {
+      color: '#FFFFFF',
+      fontSize: 16,
+      textAlign: 'center',
+    },
+  });
 
 export default App;

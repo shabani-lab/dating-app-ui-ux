@@ -2,6 +2,8 @@
 import React from 'react';
 import { ImageBackground, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { Radius, Spacing } from '@/constants/theme';
+import { useAppPalette } from '@/hooks/use-app-palette';
 import type { UserProfile } from '@/constants/users';
 
 type ProfileCardProps = {
@@ -9,6 +11,9 @@ type ProfileCardProps = {
 };
 
 const ProfileCard = ({ user }: ProfileCardProps) => {
+  const palette = useAppPalette();
+  const styles = createStyles(palette);
+
   return (
     <View style={styles.card}>
       <ImageBackground source={{ uri: user.image }} style={styles.image}>
@@ -24,50 +29,51 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
   );
 };
 
-const styles = StyleSheet.create({
-  card: {
-    width: '100%',
-    height: 250,
-    borderRadius: 15,
-    marginBottom: 20,
-    backgroundColor: '#333',
-    overflow: 'hidden',
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-    justifyContent: 'space-between',
-  },
-  liveBadge: {
-    backgroundColor: 'rgba(255, 51, 102, 0.8)',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 5,
-    position: 'absolute',
-    top: 10,
-    left: 10,
-  },
-  liveText: {
-    color: 'white',
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-  heartIcon: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-  },
-  name: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-    position: 'absolute',
-    bottom: 10,
-    left: 10,
-    textShadowColor: 'rgba(0,0,0,0.75)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 10,
-  },
-});
+const createStyles = (palette: ReturnType<typeof useAppPalette>) =>
+  StyleSheet.create({
+    card: {
+      width: '100%',
+      height: 250,
+      borderRadius: Radius.lg,
+      marginBottom: Spacing.lg,
+      backgroundColor: palette.surface,
+      overflow: 'hidden',
+    },
+    image: {
+      width: '100%',
+      height: '100%',
+      justifyContent: 'space-between',
+    },
+    liveBadge: {
+      backgroundColor: palette.accent,
+      paddingHorizontal: Spacing.sm,
+      paddingVertical: Spacing.xs,
+      borderRadius: Radius.sm,
+      position: 'absolute',
+      top: Spacing.md,
+      left: Spacing.md,
+    },
+    liveText: {
+      color: '#FFFFFF',
+      fontSize: 12,
+      fontWeight: '700',
+    },
+    heartIcon: {
+      position: 'absolute',
+      top: Spacing.md,
+      right: Spacing.md,
+    },
+    name: {
+      color: '#FFFFFF',
+      fontSize: 16,
+      fontWeight: '700',
+      position: 'absolute',
+      bottom: Spacing.md,
+      left: Spacing.md,
+      textShadowColor: palette.overlayStrong,
+      textShadowOffset: { width: 1, height: 1 },
+      textShadowRadius: 10,
+    },
+  });
 
 export default ProfileCard;

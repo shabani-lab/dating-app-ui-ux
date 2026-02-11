@@ -4,18 +4,21 @@ import React from 'react';
 
 import { HapticTab } from '@/components/haptic-tab';
 import { Ionicons } from '@expo/vector-icons';
+import { useAppPalette } from '@/hooks/use-app-palette';
 
 export default function TabLayout() {
+  const palette = useAppPalette();
+
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: '#FF3366',
-        tabBarInactiveTintColor: '#FFFFFF',
+        tabBarActiveTintColor: palette.accent,
+        tabBarInactiveTintColor: palette.textMuted,
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarStyle: {
-          backgroundColor: '#1E1E2C',
-          borderTopColor: '#1E1E2C',
+          backgroundColor: palette.background,
+          borderTopColor: palette.border,
         },
       }}>
       <Tabs.Screen

@@ -1,134 +1,212 @@
+import ProfileCard from "@/components/ProfileCard";
+import { ThemedText } from "@/components/themed-text";
+import CardSkeleton from "@/components/ui/card-skeleton";
+import EmptyState from "@/components/ui/empty-state";
+import ScreenHeader from "@/components/ui/screen-header";
+import { Radius, Spacing } from "@/constants/theme";
+import { USERS, type UserCategory, type UserProfile } from "@/constants/users";
+import { useAppPalette } from "@/hooks/use-app-palette";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import React, { useEffect, useMemo, useState } from "react";
+import {
+   FlatList,
+   ScrollView,
+   StyleSheet,
+   TextInput,
+   TouchableOpacity,
+   View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import React, { useMemo, useState } from 'react';
-import { ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Fonts } from '@/constants/theme';
-import { Ionicons } from '@expo/vector-icons';
-import ProfileCard from '@/components/ProfileCard';
-import { useRouter } from 'expo-router';
-import { USERS, type UserCategory, type UserProfile } from '@/constants/users';
+type FilterOption = "ALL" | UserCategory;
 
-type FilterOption = 'ALL' | UserCategory;
-
-const FILTERS: FilterOption[] = ['ALL', 'POPULAR', 'LIVE', 'MILFS', 'FETISHISTS'];
+const FILTERS: FilterOption[] = [
+   "ALL",
+   "POPULAR",
+   "LIVE",
+   "MILFS",
+   "FETISHISTS",
+];
 
 export default function TabTwoScreen() {
-  const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeFilter, setActiveFilter] = useState<FilterOption>('POPULAR');
+   const router = useRouter();
+   const palette = useAppPalette();
+   const styles = useMemo(() => createStyles(palette), [palette]);
+   const [searchQuery, setSearchQuery] = useState("");
+   const [activeFilter, setActiveFilter] = useState<FilterOption>("ALL");
+   const [isLoading, setIsLoading] = useState(true);
 
-  const filteredUsers = useMemo(() => {
-    const normalizedQuery = searchQuery.trim().toLowerCase();
+   useEffect(() => {
+      const timer = setTimeout(() => setIsLoading(false), 350);
+      return () => clearTimeout(timer);
+   }, []);
 
-    return USERS.filter((user) => {
-      const matchesFilter = activeFilter === 'ALL' || user.category === activeFilter;
-      const matchesSearch = normalizedQuery.length === 0 || user.name.toLowerCase().includes(normalizedQuery);
+   const filteredUsers = useMemo(() => {
+      const normalizedQuery = searchQuery.trim().toLowerCase();
 
-      return matchesFilter && matchesSearch;
-    });
-  }, [activeFilter, searchQuery]);
+      return USERS.filter((user) => {
+         const matchesFilter =
+            activeFilter === "ALL" || user.category === activeFilter;
+         const matchesSearch =
+            normalizedQuery.length === 0 ||
+            user.name.toLowerCase().includes(normalizedQuery);
 
-  const handleProfilePress = (user: UserProfile) => {
-    router.push({ pathname: '/user-profile', params: { id: user.id } });
-  };
+         return matchesFilter && matchesSearch;
+      });
+   }, [activeFilter, searchQuery]);
 
-  return (
-    <ThemedView style={styles.container}>
-      <View style={styles.header}>
-        <Ionicons name="menu" size={24} color="white" />
-        <ThemedText type="title" style={{ fontFamily: Fonts.rounded }}>
-          CATEGORIES
-        </ThemedText>
-        <Ionicons name="person-circle" size={24} color="white" />
-      </View>
-      <View style={styles.searchBar}>
-        <Ionicons name="search" size={20} color="gray" />
-        <TextInput
-          placeholder="SEARCH"
-          placeholderTextColor="gray"
-          style={styles.searchInput}
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-        />
-        <Ionicons name="mic" size={20} color="gray" />
-      </View>
-      <View style={styles.filters}>
-        {FILTERS.map((filter) => (
-          <TouchableOpacity
-            key={filter}
-            style={[styles.filterButton, activeFilter === filter ? styles.activeFilter : undefined]}
-            onPress={() => setActiveFilter(filter)}
-          >
-            <ThemedText style={styles.filterText}>{filter}</ThemedText>
-          </TouchableOpacity>
-        ))}
-      </View>
-      <ScrollView contentContainerStyle={styles.grid}>
-        {filteredUsers.map((user) => (
-          <TouchableOpacity key={user.id} onPress={() => handleProfilePress(user)} style={styles.cardWrapper}>
-            <ProfileCard user={user} />
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-    </ThemedView>
-  );
+   const handleProfilePress = (user: UserProfile) => {
+      router.push({ pathname: "/user-profile", params: { id: user.id } });
+   };
+
+   return (
+      <SafeAreaView
+         style={styles.container}
+         edges={["top"]}>
+         <ScreenHeader
+            title="CATEGORIES"
+            leftIcon="menu"
+            rightIcon="person-circle"
+         />
+         <View style={styles.searchBar}>
+            <Ionicons
+               name="search"
+               size={20}
+               color={palette.textMuted}
+            />
+            <TextInput
+               placeholder="SEARCH"
+               placeholderTextColor={palette.textMuted}
+               style={styles.searchInput}
+               value={searchQuery}
+               onChangeText={setSearchQuery}
+            />
+            <Ionicons
+               name="mic"
+               size={20}
+               color={palette.textMuted}
+            />
+         </View>
+         <FlatList
+            data={FILTERS}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.filters}
+            keyExtractor={(item) => item}
+            renderItem={({ item: filter }) => (
+               <TouchableOpacity
+                  style={[
+                     styles.filterButton,
+                     activeFilter === filter ? styles.activeFilter : undefined,
+                  ]}
+                  onPress={() => setActiveFilter(filter)}>
+                  <ThemedText
+                     style={[
+                        styles.filterText,
+                        activeFilter === filter
+                           ? styles.filterTextActive
+                           : styles.filterTextInactive,
+                     ]}>
+                     {filter}
+                  </ThemedText>
+               </TouchableOpacity>
+            )}
+         />
+         <ScrollView
+            contentContainerStyle={styles.grid}
+            keyboardShouldPersistTaps="handled">
+            {isLoading ? (
+               Array.from({ length: 6 }).map((_, index) => (
+                  <View
+                     key={`skeleton-${index}`}
+                     style={styles.cardWrapper}>
+                     <CardSkeleton height={250} />
+                  </View>
+               ))
+            ) : filteredUsers.length > 0 ? (
+               filteredUsers.map((user) => (
+                  <TouchableOpacity
+                     key={user.id}
+                     onPress={() => handleProfilePress(user)}
+                     style={styles.cardWrapper}>
+                     <ProfileCard user={user} />
+                  </TouchableOpacity>
+               ))
+            ) : (
+               <View style={styles.emptyStateWrap}>
+                  <EmptyState
+                     title="No Profiles Found"
+                     subtitle="Try another search or switch category."
+                     icon="sparkles-outline"
+                  />
+               </View>
+            )}
+         </ScrollView>
+      </SafeAreaView>
+   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 50,
-    backgroundColor: '#1E1E2C',
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-  },
-  searchBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#2A2A3C',
-    borderRadius: 20,
-    paddingHorizontal: 15,
-    marginHorizontal: 20,
-    marginTop: 20,
-  },
-  searchInput: {
-    flex: 1,
-    color: 'white',
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-  },
-  filters: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginVertical: 20,
-    marginHorizontal: 10,
-  },
-  filterButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    borderRadius: 20,
-    backgroundColor: '#2A2A3C',
-  },
-  activeFilter: {
-    backgroundColor: '#FF3366',
-  },
-  filterText: {
-    color: 'white',
-    fontSize: 12,
-  },
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-    paddingHorizontal: 10,
-    paddingBottom: 24,
-  },
-  cardWrapper: {
-    width: '47%',
-  },
-});
+const createStyles = (palette: ReturnType<typeof useAppPalette>) =>
+   StyleSheet.create({
+      container: {
+         flex: 1,
+         backgroundColor: palette.background,
+      },
+      searchBar: {
+         flexDirection: "row",
+         alignItems: "center",
+         backgroundColor: palette.surface,
+         borderRadius: Radius.xl,
+         paddingHorizontal: Spacing.lg,
+         marginHorizontal: Spacing.xl,
+         marginTop: Spacing.xl,
+      },
+      searchInput: {
+         flex: 1,
+         color: palette.textPrimary,
+         paddingVertical: Spacing.md,
+         paddingHorizontal: Spacing.sm,
+      },
+      filters: {
+         paddingHorizontal: Spacing.md,
+         marginBottom: Spacing.xl,
+         gap: Spacing.sm,
+      },
+      filterButton: {
+         minHeight: 44,
+         paddingVertical: Spacing.sm,
+         paddingHorizontal: Spacing.lg,
+         borderRadius: Radius.pill,
+         backgroundColor: palette.surface,
+         alignItems: "center",
+         justifyContent: "center",
+      },
+      activeFilter: {
+         backgroundColor: palette.accent,
+      },
+      filterText: {
+         fontSize: 12,
+         fontWeight: "600",
+      },
+      filterTextActive: {
+         color: "#FFFFFF",
+      },
+      filterTextInactive: {
+         color: palette.textPrimary,
+      },
+      grid: {
+         flexDirection: "row",
+         flexWrap: "wrap",
+         justifyContent: "space-around",
+         paddingHorizontal: Spacing.md,
+         paddingBottom: Spacing.x2,
+      },
+      cardWrapper: {
+         width: "47%",
+      },
+      emptyStateWrap: {
+         width: "100%",
+         paddingTop: Spacing.xl,
+      },
+   });
