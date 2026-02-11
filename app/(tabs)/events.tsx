@@ -1,4 +1,4 @@
-import { EVENTS } from '@/constants/mock-data';
+import { EVENTS, type EventItem } from '@/constants/mock-data';
 import { Radius, Sizes, Spacing, Typography } from '@/constants/theme';
 import { useAppPalette } from '@/hooks/use-app-palette';
 import { Ionicons } from '@expo/vector-icons';
@@ -6,13 +6,16 @@ import CardSkeleton from '@/components/ui/card-skeleton';
 import ScreenHeader from '@/components/ui/screen-header';
 import SectionHeader from '@/components/ui/section-header';
 import React, { useEffect, useMemo, useState } from 'react';
-import { ImageBackground, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { FlatList, ImageBackground, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function EventsScreen() {
   const palette = useAppPalette();
   const styles = useMemo(() => createStyles(palette), [palette]);
   const [isLoading, setIsLoading] = useState(true);
+  const eventItems: (EventItem | string)[] = isLoading
+    ? Array.from({ length: 4 }, (_, index) => `event-skeleton-${index}`)
+    : EVENTS;
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 350);
@@ -25,41 +28,43 @@ export default function EventsScreen() {
       {!isLoading ? (
         <SectionHeader caption={`${EVENTS.length} scheduled events`} style={styles.resultsMetaWrap} />
       ) : null}
-      <ScrollView contentContainerStyle={styles.content}>
-        {isLoading
-          ? Array.from({ length: 4 }).map((_, index) => (
-              <CardSkeleton key={`event-skeleton-${index}`} height={210} />
-            ))
-          : EVENTS.map((event) => (
-              <ImageBackground
-                key={event.id}
-                source={{ uri: event.image }}
-                style={styles.card}
-                imageStyle={styles.cardImage}>
-                <View style={styles.overlay} />
-                <View style={styles.badge}>
-                  <Text style={styles.badgeText}>{event.city}</Text>
+      <FlatList
+        data={eventItems}
+        keyExtractor={(item) => (typeof item === 'string' ? item : item.id)}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+        renderItem={({ item }) => {
+          if (typeof item === 'string') {
+            return <CardSkeleton height={210} />;
+          }
+
+          return (
+            <ImageBackground source={{ uri: item.image }} style={styles.card} imageStyle={styles.cardImage}>
+              <View style={styles.overlay} />
+              <View style={styles.badge}>
+                <Text style={styles.badgeText}>{item.city}</Text>
+              </View>
+              <View style={styles.cardBody}>
+                <Text style={styles.eventTitle}>{item.title}</Text>
+                <View style={styles.row}>
+                  <Ionicons name="calendar-outline" size={Sizes.iconSm} color="#FFFFFF" />
+                  <Text style={styles.meta}>
+                    {item.date} • {item.time}
+                  </Text>
                 </View>
-                <View style={styles.cardBody}>
-                  <Text style={styles.eventTitle}>{event.title}</Text>
-                  <View style={styles.row}>
-                    <Ionicons name="calendar-outline" size={Sizes.iconSm} color="#FFFFFF" />
-                    <Text style={styles.meta}>
-                      {event.date} • {event.time}
-                    </Text>
-                  </View>
-                  <View style={styles.row}>
-                    <Ionicons name="location-outline" size={Sizes.iconSm} color="#FFFFFF" />
-                    <Text style={styles.meta}>{event.venue}</Text>
-                  </View>
-                  <View style={styles.footer}>
-                    <Text style={styles.attendees}>{event.attendees} going</Text>
-                    <Text style={styles.price}>from ${event.ticketFrom}</Text>
-                  </View>
+                <View style={styles.row}>
+                  <Ionicons name="location-outline" size={Sizes.iconSm} color="#FFFFFF" />
+                  <Text style={styles.meta}>{item.venue}</Text>
                 </View>
-              </ImageBackground>
-            ))}
-      </ScrollView>
+                <View style={styles.footer}>
+                  <Text style={styles.attendees}>{item.attendees} going</Text>
+                  <Text style={styles.price}>from ${item.ticketFrom}</Text>
+                </View>
+              </View>
+            </ImageBackground>
+          );
+        }}
+      />
     </SafeAreaView>
   );
 }

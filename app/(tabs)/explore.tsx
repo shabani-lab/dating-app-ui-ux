@@ -4,12 +4,13 @@ import EmptyState from '@/components/ui/empty-state';
 import FilterChip from '@/components/ui/filter-chip';
 import SearchBar from '@/components/ui/search-bar';
 import SectionHeader from '@/components/ui/section-header';
+import AnimatedPressable from '@/components/ui/animated-pressable';
 import { Spacing } from '@/constants/theme';
 import { USERS, type UserCategory, type UserProfile } from '@/constants/users';
 import { useAppPalette } from '@/hooks/use-app-palette';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useMemo, useState } from 'react';
-import { FlatList, Pressable, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 type FilterOption = 'ALL' | UserCategory;
@@ -89,9 +90,9 @@ export default function ExploreScreen() {
           }
 
           return (
-            <Pressable style={styles.cardWrapper} onPress={() => handleProfilePress(item)}>
+            <AnimatedPressable style={styles.cardWrapper} onPress={() => handleProfilePress(item)}>
               <ProfileCard user={item} />
-            </Pressable>
+            </AnimatedPressable>
           );
         }}
         ListEmptyComponent={

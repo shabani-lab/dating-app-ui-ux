@@ -3,7 +3,8 @@ import { Radius, Sizes, Spacing, Typography } from '@/constants/theme';
 import { useAppPalette } from '@/hooks/use-app-palette';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useMemo } from 'react';
-import { ImageBackground, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import IconButton from '@/components/ui/icon-button';
+import { FlatList, ImageBackground, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const LiveScreen = () => {
@@ -25,26 +26,27 @@ const LiveScreen = () => {
           </View>
         </View>
 
-        <ScrollView style={styles.chatContainer}>
-          {LIVE_STREAM.messages.map((msg) => (
-            <View key={msg.id} style={styles.messageContainer}>
-              <Text style={styles.messageUser}>{msg.user}:</Text>
-              <Text style={styles.messageText}>{msg.message}</Text>
+        <FlatList
+          data={LIVE_STREAM.messages}
+          keyExtractor={(item) => String(item.id)}
+          style={styles.chatContainer}
+          contentContainerStyle={styles.chatContent}
+          showsVerticalScrollIndicator={false}
+          keyboardDismissMode="on-drag"
+          keyboardShouldPersistTaps="handled"
+          renderItem={({ item }) => (
+            <View style={styles.messageContainer}>
+              <Text style={styles.messageUser}>{item.user}:</Text>
+              <Text style={styles.messageText}>{item.message}</Text>
             </View>
-          ))}
-        </ScrollView>
+          )}
+        />
 
         <View style={styles.inputContainer}>
           <TextInput style={styles.input} placeholder="Type your comment..." placeholderTextColor={palette.textMuted} />
-          <TouchableOpacity style={styles.iconButton}>
-            <Ionicons name="send" size={Sizes.iconLg} color={palette.textPrimary} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton}>
-            <Ionicons name="gift" size={Sizes.iconLg} color={palette.textPrimary} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton}>
-            <Ionicons name="heart" size={Sizes.iconLg} color={palette.accent} />
-          </TouchableOpacity>
+          <IconButton icon="send" style={styles.iconButton} />
+          <IconButton icon="gift" style={styles.iconButton} />
+          <IconButton icon="heart" style={styles.iconButton} iconColor={palette.accent} />
         </View>
       </ImageBackground>
     </SafeAreaView>
@@ -101,6 +103,9 @@ const createStyles = (palette: ReturnType<typeof useAppPalette>) =>
       flex: 1,
       paddingHorizontal: Spacing.xl,
     },
+    chatContent: {
+      paddingBottom: Spacing.md,
+    },
     messageContainer: {
       flexDirection: 'row',
       marginBottom: Spacing.sm + 2,
@@ -138,14 +143,6 @@ const createStyles = (palette: ReturnType<typeof useAppPalette>) =>
     },
     iconButton: {
       marginLeft: Spacing.lg - 1,
-      width: Sizes.touchTarget,
-      height: Sizes.touchTarget,
-      borderRadius: Radius.pill,
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: palette.surface,
-      borderWidth: 1,
-      borderColor: palette.border,
     },
   });
 

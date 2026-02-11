@@ -1,4 +1,4 @@
-import { LOCATIONS } from '@/constants/mock-data';
+import { LOCATIONS, type LocationSpot } from '@/constants/mock-data';
 import { Radius, Sizes, Spacing, Typography } from '@/constants/theme';
 import { useAppPalette } from '@/hooks/use-app-palette';
 import { Ionicons } from '@expo/vector-icons';
@@ -6,13 +6,16 @@ import CardSkeleton from '@/components/ui/card-skeleton';
 import ScreenHeader from '@/components/ui/screen-header';
 import SectionHeader from '@/components/ui/section-header';
 import React, { useEffect, useMemo, useState } from 'react';
-import { ImageBackground, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { FlatList, ImageBackground, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function LocationScreen() {
   const palette = useAppPalette();
   const styles = useMemo(() => createStyles(palette), [palette]);
   const [isLoading, setIsLoading] = useState(true);
+  const locationItems: (LocationSpot | string)[] = isLoading
+    ? Array.from({ length: 4 }, (_, index) => `location-skeleton-${index}`)
+    : LOCATIONS;
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 350);
@@ -25,39 +28,41 @@ export default function LocationScreen() {
       {!isLoading ? (
         <SectionHeader caption={`${LOCATIONS.length} hot spots near you`} style={styles.resultsMetaWrap} />
       ) : null}
-      <ScrollView contentContainerStyle={styles.content}>
-        {isLoading
-          ? Array.from({ length: 4 }).map((_, index) => (
-              <CardSkeleton key={`location-skeleton-${index}`} height={190} />
-            ))
-          : LOCATIONS.map((spot) => (
-              <ImageBackground
-                key={spot.id}
-                source={{ uri: spot.image }}
-                style={styles.card}
-                imageStyle={styles.cardImage}>
-                <View style={styles.overlay} />
-                <View style={styles.cardTop}>
-                  <Text style={styles.city}>{spot.city}</Text>
-                  <Text style={styles.country}>{spot.country}</Text>
+      <FlatList
+        data={locationItems}
+        keyExtractor={(item) => (typeof item === 'string' ? item : item.id)}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+        renderItem={({ item }) => {
+          if (typeof item === 'string') {
+            return <CardSkeleton height={190} />;
+          }
+
+          return (
+            <ImageBackground source={{ uri: item.image }} style={styles.card} imageStyle={styles.cardImage}>
+              <View style={styles.overlay} />
+              <View style={styles.cardTop}>
+                <Text style={styles.city}>{item.city}</Text>
+                <Text style={styles.country}>{item.country}</Text>
+              </View>
+              <View style={styles.cardBottom}>
+                <View style={styles.row}>
+                  <Ionicons name="people-outline" size={Sizes.iconSm} color="#FFFFFF" />
+                  <Text style={styles.meta}>{item.activeUsers} active users</Text>
                 </View>
-                <View style={styles.cardBottom}>
-                  <View style={styles.row}>
-                    <Ionicons name="people-outline" size={Sizes.iconSm} color="#FFFFFF" />
-                    <Text style={styles.meta}>{spot.activeUsers} active users</Text>
-                  </View>
-                  <View style={styles.row}>
-                    <Ionicons name="ribbon-outline" size={Sizes.iconSm} color="#FFFFFF" />
-                    <Text style={styles.meta}>Top: {spot.topCategory}</Text>
-                  </View>
-                  <View style={styles.row}>
-                    <Ionicons name="navigate-outline" size={Sizes.iconSm} color="#FFFFFF" />
-                    <Text style={styles.meta}>{spot.distanceKm.toFixed(1)} km away</Text>
-                  </View>
+                <View style={styles.row}>
+                  <Ionicons name="ribbon-outline" size={Sizes.iconSm} color="#FFFFFF" />
+                  <Text style={styles.meta}>Top: {item.topCategory}</Text>
                 </View>
-              </ImageBackground>
-            ))}
-      </ScrollView>
+                <View style={styles.row}>
+                  <Ionicons name="navigate-outline" size={Sizes.iconSm} color="#FFFFFF" />
+                  <Text style={styles.meta}>{item.distanceKm.toFixed(1)} km away</Text>
+                </View>
+              </View>
+            </ImageBackground>
+          );
+        }}
+      />
     </SafeAreaView>
   );
 }

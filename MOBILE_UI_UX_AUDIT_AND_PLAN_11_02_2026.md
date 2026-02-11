@@ -153,3 +153,19 @@
 - Manual test:
   - Toggle OS Reduce Motion and verify skeleton pulse disables.
   - Tap header icons/chips/search action and verify subtle press feedback.
+
+### Evidence — Commit: feat(ui): optimize list screens and interaction polish
+- What changed (files):
+  - `app/(tabs)/events.tsx`
+  - `app/(tabs)/location.tsx`
+  - `app/(tabs)/explore.tsx`
+  - `app/live.tsx`
+  - `MOBILE_UI_UX_AUDIT_AND_PLAN_11_02_2026.md`
+- Before/after notes:
+  - Replaced mapped `ScrollView` patterns in Events/Location with `FlatList` for smoother list rendering.
+  - Replaced explore profile card touch wrappers with shared animated press feedback.
+  - Updated live chat message rendering to `FlatList` and enabled keyboard dismiss-on-drag.
+- Manual test:
+  - Scroll Events/Location/Live continuously and verify no layout jumps.
+  - In Explore, tap cards and verify feedback + navigation to profile still works.
+  - In Live, open keyboard and drag message list to dismiss.
