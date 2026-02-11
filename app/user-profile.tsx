@@ -1,23 +1,15 @@
-import ScreenHeader from "@/components/ui/screen-header";
-import FlatSection from "@/components/ui/flat-section";
 import AnimatedPressable from "@/components/ui/animated-pressable";
+import FlatSection from "@/components/ui/flat-section";
 import Separator from "@/components/ui/separator";
 import { Radius, Spacing, Typography } from "@/constants/theme";
 import { DEFAULT_USER, getUserById } from "@/constants/users";
 import { useAppPalette } from "@/hooks/use-app-palette";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import React, { useMemo } from "react";
-import {
-   Image,
-   ScrollView,
-   StyleSheet,
-   Text,
-   View,
-} from "react-native";
+import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const UserProfileScreen = () => {
-   const router = useRouter();
    const palette = useAppPalette();
    const styles = useMemo(() => createStyles(palette), [palette]);
    const { id } = useLocalSearchParams<{ id?: string | string[] }>();
@@ -27,12 +19,7 @@ const UserProfileScreen = () => {
    return (
       <SafeAreaView
          style={styles.container}
-         edges={["top", "bottom"]}>
-         <ScreenHeader
-            title={user.name}
-            leftIcon="arrow-back"
-            onLeftPress={() => router.back()}
-         />
+         edges={["bottom"]}>
          <ScrollView contentContainerStyle={styles.content}>
             <View style={styles.profileHeader}>
                <Image

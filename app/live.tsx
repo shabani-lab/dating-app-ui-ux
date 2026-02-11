@@ -12,7 +12,7 @@ const LiveScreen = () => {
   const styles = useMemo(() => createStyles(palette), [palette]);
 
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <ImageBackground source={{ uri: LIVE_STREAM.hostImage }} style={styles.backgroundImage}>
         <View style={styles.overlay} />
         <View style={styles.header}>

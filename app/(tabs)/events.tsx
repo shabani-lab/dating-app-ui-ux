@@ -3,7 +3,7 @@ import { Radius, Sizes, Spacing, Typography } from '@/constants/theme';
 import { useAppPalette } from '@/hooks/use-app-palette';
 import { Ionicons } from '@expo/vector-icons';
 import CardSkeleton from '@/components/ui/card-skeleton';
-import ScreenHeader from '@/components/ui/screen-header';
+import SearchBar from '@/components/ui/search-bar';
 import SectionHeader from '@/components/ui/section-header';
 import React, { useEffect, useMemo, useState } from 'react';
 import { FlatList, ImageBackground, StyleSheet, Text, View } from 'react-native';
@@ -13,9 +13,23 @@ export default function EventsScreen() {
   const palette = useAppPalette();
   const styles = useMemo(() => createStyles(palette), [palette]);
   const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredEvents = useMemo(() => {
+    const normalizedQuery = searchQuery.trim().toLowerCase();
+
+    if (!normalizedQuery) {
+      return EVENTS;
+    }
+
+    return EVENTS.filter((item) =>
+      [item.title, item.city, item.venue].some((value) => value.toLowerCase().includes(normalizedQuery))
+    );
+  }, [searchQuery]);
+
   const eventItems: (EventItem | string)[] = isLoading
     ? Array.from({ length: 4 }, (_, index) => `event-skeleton-${index}`)
-    : EVENTS;
+    : filteredEvents;
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 350);
@@ -24,9 +38,9 @@ export default function EventsScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <ScreenHeader title="UPCOMING EVENTS" leftIcon="calendar-outline" rightIcon="options-outline" />
+      <SearchBar value={searchQuery} onChangeText={setSearchQuery} style={styles.searchBar} />
       {!isLoading ? (
-        <SectionHeader caption={`${EVENTS.length} scheduled events`} style={styles.resultsMetaWrap} />
+        <SectionHeader caption={`${filteredEvents.length} scheduled events`} style={styles.resultsMetaWrap} />
       ) : null}
       <FlatList
         data={eventItems}
@@ -77,12 +91,16 @@ const createStyles = (palette: ReturnType<typeof useAppPalette>) =>
     },
     content: {
       paddingHorizontal: Spacing.lg,
-      paddingBottom: 30,
+      paddingBottom: Spacing.sm,
       gap: Spacing.lg,
     },
-    resultsMetaWrap: {
-      marginTop: -Spacing.sm,
+    searchBar: {
+      marginHorizontal: Spacing.lg,
+      marginTop: Spacing.lg,
       marginBottom: Spacing.md,
+    },
+    resultsMetaWrap: {
+      marginBottom: Spacing.md + 2,
       paddingHorizontal: Spacing.lg,
     },
     card: {

@@ -17,7 +17,7 @@ export default function ProfileScreen() {
   const styles = useMemo(() => createStyles(palette), [palette]);
 
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <ScreenHeader title="PROFILE" leftIcon="settings-outline" rightIcon="notifications-outline" />
       <ScrollView contentContainerStyle={styles.content} keyboardDismissMode="on-drag">
         <View style={styles.headerContent}>

@@ -90,7 +90,7 @@ export default function ExploreScreen() {
           }
 
           return (
-            <AnimatedPressable style={styles.cardWrapper} onPress={() => handleProfilePress(item)}>
+            <AnimatedPressable containerStyle={styles.cardWrapper} onPress={() => handleProfilePress(item)}>
               <ProfileCard user={item} />
             </AnimatedPressable>
           );
@@ -136,7 +136,7 @@ const createStyles = (palette: ReturnType<typeof useAppPalette>) =>
     grid: {
       paddingHorizontal: Spacing.lg,
       paddingTop: Spacing.sm,
-      paddingBottom: Spacing.x2,
+      paddingBottom: Spacing.sm,
       gap: Spacing.lg,
     },
     gridRow: {
